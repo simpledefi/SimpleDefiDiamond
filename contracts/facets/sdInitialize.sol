@@ -25,9 +25,6 @@ contract sdInitialize {
         if (_beacon == address(0)) revert sdAddressError();
         LibDiamond.enforceIsContractOwner();
         
-        // address ownerAddr = iBeacon(_beacon).getAddress("OWNERADDRESS");
-        // require(ownerAddr != address(0), "OWNERADDRESS not configured");
-
         LibDiamond.setContractOwner(msg.sender);
         LibDiamond.setDiamondFactory(msg.sender);
 
@@ -36,7 +33,7 @@ contract sdInitialize {
         s.iData.exchange = _exchangeName;    
         s.revision = "v0.7";
         
-        s.iData.feeCollector = 0x6492830c2292381CcF3D439ea70a2Bfbc1a52cd9; //iBeacon(_beacon).getAddress("FEECOLLECTOR");
+        s.iData.feeCollector = iBeacon(_beacon).getAddress("FEECOLLECTOR");
         (s.SwapFee,) = iBeacon(_beacon).getFee(_exchangeName,"SWAPFEE",address(0)); //SWAP FEE is 1e8
 
         s.adminUsers[iBeacon(_beacon).getAddress("HARVESTER")] = true;
