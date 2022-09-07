@@ -1,0 +1,27 @@
+const fs = require("fs");
+const testFacet = artifacts.require("testFacet")
+
+async function  getSelectors (contract) {
+    const selectors = contract.abi.reduce((acc, val) => {
+        if (val.type === 'function') {
+        acc.push(val.signature)
+        return acc
+        } else {
+        return acc
+        }
+    }, [])
+    return selectors
+}
+    
+module.exports = async function (deployer, network, accounts) {
+    console.log("testFacet");
+    await deployer.deploy(testFacet);    
+    let facet = await testFacet.deployed();
+
+    let selectors = await getSelectors(facet);
+    let obj = {};
+    obj[facet.address] = selectors; 
+
+    fs.writeFileSync("/tmp/testFaucet.json",JSON.stringify(obj));
+
+}  
