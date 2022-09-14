@@ -1,4 +1,5 @@
 const fs = require("fs");
+const Diamond = artifacts.require('Diamond')
 // let BEACON_ADDR = "0x8422d0922d3bde86a8A96461Bcd3c301b8588860";
 let BEACON_ADDR = "0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2";
 
@@ -21,10 +22,14 @@ module.exports = async function(deployer, network, accounts) {
 
     let deployedDiamond = await Diamond.deployed()
     console.log("Setting MEP to " + deployedDiamond.address);
+    let diamond_addr = deployedDiamond.address;
+    // let diamond_addr = "0xc296440aCA127746e8034425C409d8339B51E220";    
 
     let beacon = new web3.eth.Contract(BEACON_ABI,BEACON_ADDR)
 
-    await beacon.methods.setExchange(CONTRACT_TYPE, deployedDiamond.address, 0).send({from: OWNER_ADDR,gas:150000})
+    await beacon.methods.setExchange(CONTRACT_TYPE, diamond_addr, 0).send({from: OWNER_ADDR,gas:150000})
     await beacon.methods.setAddress("GODUSER",OWNER_ADDR).send({from: OWNER_ADDR});
     await beacon.methods.setAddress("FEECOLLECTOR",FEE_COLLECTOR).send({from: OWNER_ADDR});
 }
+
+

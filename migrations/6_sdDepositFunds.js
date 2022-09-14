@@ -5,6 +5,7 @@ const sdPoolUtil = artifacts.require("sdPoolUtil")
 const Diamond = artifacts.require('Diamond')
 const DiamondCutFacet = artifacts.require('DiamondCutFacet')
 const zeroAddress = '0x0000000000000000000000000000000000000000'
+let GOD_ADDR = "0x0e0435B1aB9B9DCddff2119623e25be63ef5CB6e";
 
 const FacetCutAction = {
     Add: 0,
@@ -28,25 +29,27 @@ module.exports = async function (deployer, network, accounts) {
     console.log("sdDepositFunds");
     let dep = await sdPoolUtil.deployed();
     if (!dep) {
-        await deployer.deploy(sdPoolUtil);
+        await deployer.deploy(sdPoolUtil), {from: GOD_ADDR};
         dep = await sdPoolUtil.deployed();
     }
 
     await deployer.link(dep, sdDepositFunds);
-    await deployer.deploy(sdDepositFunds);    
+    await deployer.deploy(sdDepositFunds, {from: GOD_ADDR});    
 
     let diamond = await Diamond.deployed()
+    // let diamond = {address: "0xc296440aCA127746e8034425C409d8339B51E220"}
+
     console.log("DIAOMOND ADDRESS: " + diamond.address)
     let diamondCutFacet = new web3.eth.Contract(DiamondCutFacet.abi, diamond.address)
+
     let sdFacet = await sdDepositFunds.deployed()
+    // let sdFacet = {address:"0x539384Aa69Cf67312A849D8baBBBF9D1AbCEF40C"}
+    let selectors = await getSelectors(sdDepositFunds)
+    console.log(sdFacet.address, JSON.stringify(selectors))
 
-    let selectors = await getSelectors(sdFacet)
-    console.log(JSON.stringify(selectors))
-
-    web3.eth.defaultAccount = accounts[0]
     await diamondCutFacet.methods
       .diamondCut([[sdFacet.address, FacetCutAction.Add, selectors]], zeroAddress, '0x')
-      .send({ from: web3.eth.defaultAccount, gas: 1000000 })
+      .send({ from: GOD_ADDR, gas: 1000000 })
 
 
 }  

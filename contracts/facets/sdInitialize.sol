@@ -20,6 +20,11 @@ contract sdInitialize {
     error sdLPContractRequired();
     error sdPoolNotActive();
 
+
+    ///@notice initialize the contract and get configuration parameters from different contracts
+    ///@param _poolId - PID from dex, pulls info from masterchef contract
+    ///@param _beacon - address of the beacon contract
+    ///@param _exchangeName - name of exchange used to lookup info from beacon contract
     function initialize(uint64 _poolId, address _beacon, string memory _exchangeName) public payable  {
         if (s._initialized == true) revert sdAlreadyInitialized();
         if (_beacon == address(0)) revert sdAddressError();
@@ -80,6 +85,9 @@ contract sdInitialize {
         
         emit sdInitialized(_poolId,_lpContract);
     }
+
+    ///@notice updates the facet for a particular diamond
+    ///@param _diamondCut - structure of facets with add/update/delete defined in structure
     function  updateFacets(IDiamondCut.FacetCut[] memory _diamondCut) public {
         LibDiamond.enforceIsContractOwner(); //allow only contract factory to update
         LibDiamond.diamondCut(_diamondCut, address(0), new bytes(0));

@@ -24,19 +24,20 @@ contract('simpleDefi', accounts => {
 
     it('should deploy combineApp with initial Contracts', async () => {
         await web3.eth.sendTransaction({to:OWNER_ADDR, from:accounts[0], value:web3.utils.toWei("100", "ether")});
-        let diamondFactory = await DiamondFactory.deployed()
+        // let diamondFactory = await DiamondFactory.deployed()
+        let diamondFactory = await DiamondFactory.at("0xf630a8FcD389d12126fb3C99CFea8cD39Ec08566")
         // console.log(web3.currentProvider);        
         // exchange = "PANCAKESWAP";
         // pool_ID = 2;
         pool_ID = 3;
         exchange = 'PANCAKESWAP';
-        let tx = await diamondFactory.initialize(pool_ID,exchange,1,_salt(),{from: accounts[0]})
+        let tx = await diamondFactory.initialize(pool_ID,exchange,1,_salt(),{from: OWNER_ADDR})
         app2 = new App(tx,OWNER_ADDR,web3);
     
 
         n_pool_ID = 2;
         let n_exchange = 'PANCAKESWAP'
-        let tx2 = await diamondFactory.initialize(n_pool_ID,n_exchange,1,_salt(),{from: accounts[0]})
+        let tx2 = await diamondFactory.initialize(n_pool_ID,n_exchange,1,_salt(),{from: OWNER_ADDR})
         app = new App(tx2,OWNER_ADDR,web3);
 
         console.log("Done deploy")

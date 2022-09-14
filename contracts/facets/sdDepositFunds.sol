@@ -83,6 +83,8 @@ contract sdDepositFunds  {
 
     ///@notice Invest funds into pool
     ///@param inValue amount of money to add into the external pool
+    ///@param _user - user to add funds to 
+    ///@param _deposit - deposit liquidity into masterchef contract
     ///@dev take in BNB, split it across the 2 tokens and add the liquidity
 
     function addFunds(uint inValue, address _user, bool _deposit) private returns (uint liquidity){

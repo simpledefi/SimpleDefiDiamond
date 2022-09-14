@@ -40,6 +40,7 @@ contract sdData {
 
     
     ///@notice toggles pause state of contract
+    ///@dev - flips between true/false each time called
     function pause() public allowAdmin {
         s.paused = !s.paused;
         emit sdPause(s.paused);

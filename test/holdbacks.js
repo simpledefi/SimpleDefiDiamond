@@ -16,7 +16,9 @@ const _salt = function() {return  (Math.random()*1e18).toString();};
 contract('simpleDefi', accounts => {
     let HARVEST_ADDR = "0x6492830c2292381CcF3D439ea70a2Bfbc1a52cd9";
     let OWNER_ADDR = "0x42a515c1EDB651F4c69c56E05578D2805D6451eB";
-    let BEACON_ADDR = "0x8422d0922d3bde86a8A96461Bcd3c301b8588860";
+    // let BEACON_ADDR = "0x8422d0922d3bde86a8A96461Bcd3c301b8588860";
+    let BEACON_ADDR = "0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2";
+
 
     let exchange, pool_ID;
     let app;

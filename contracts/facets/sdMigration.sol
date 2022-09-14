@@ -131,6 +131,8 @@ contract sdMigration {
     }
 
     ///@notice receive transaction log from source contract, and store locally
+    ///@param _th - TransactionLog structure
+    ///@dev takes transholder structure and pushes it onto the transactionLog array stack
     function receiveTranslog(transHolders calldata _th) public migrator{
         if (_th.deposit)
             s.iData.depositTotal += _th.amount;
@@ -149,6 +151,8 @@ contract sdMigration {
     
 
     ///@notice - set contract to allow migrations
+    ///@param _addr - address of destination contract
+    ///@dev passes the current address and the last timestamp that a harvest occured, required for pool calculations
     function setMigrator(address _addr) internal {
         // use delegate call as only "god" user can call the migrateFrom function
         (bool success, ) = _addr.delegatecall(abi.encodeWithSignature("migrateTo(address,uint256)", address(this),s.iData.lastProcess));

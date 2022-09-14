@@ -126,7 +126,7 @@ contract DiamondFactory {
         require(beaconContract != address(0), "Beacon Contract required");
         require(bytes(_exchange).length > 0,"Exchange Name cannot be empty");
         require(_salt > 0, "Salt must be provided");
-
+        require(poolType > 0,"OOPS");
 
         prBeacon.sExchangeInfo memory exchangeInfo = prBeacon(beaconContract).getExchangeInfo(_exchange);
         require(exchangeInfo.chefContract != address(0), "Chef Contract required");
