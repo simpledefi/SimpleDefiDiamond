@@ -162,6 +162,8 @@ library sdPoolUtil {
         return _units;
     }
 
+    ///@notice commits transactions from transactionlog and updates totals for user and pool
+    ///@param  _s - app storage structure
     function commitTransactions(AppStorage storage _s) internal {
         for (uint i = 0; i < _s.transactionLog.length;i++){
             transHolders memory _tmp = _s.transactionLog[i];
@@ -191,7 +193,7 @@ library sdPoolUtil {
         delete _s.transactionLog;
     }
 
-    ///@notice Function will distribute BNB to stakeholders based on stake
+    ///@notice Function will distribute amount to stakeholders based on stake
     ///@param _s - AppStorage structure
     ///@param _amount contains BNB to be distributed to stakeholders based on stake, and amount of reward token to for recording.
     ///@return _feeAmount - amount of BNB recovered in fees
@@ -234,7 +236,7 @@ library sdPoolUtil {
         commitTransactions(_s);
     }
 
-    ///@notice due to stack limits, this function is broken out of the distContrib function looop
+    ///@notice due to stack limits, this function is broken out of the distContrib function loop
     ///@param _s - AppStorage structure
     ///@param _user - address of user to caluclate
     ///@param _amt contains _amount, _rewardToken, and fee due to stack limitations
@@ -341,6 +343,7 @@ library sdPoolUtil {
     }
 
     ///@notice Remove specified liquidity from the pool
+    ///@param _s - AppStorage structure
     ///@param _units percent of total liquidity to remove
     ///@return amountTokenA of liquidity removed (Token A)
     ///@return amountTokenB of liquidity removed (Token B)
@@ -466,7 +469,9 @@ library sdPoolUtil {
         emit Swap(path[0], path[path.length-1],amounts[0], amounts[amounts.length-1]);
         return amounts[amounts.length-1];
     }
-    
+    ///@notice - removes all deposits, and rewards and send them back to the user    
+    ///@param _s - AppStorage structure
+    ///@return _total_base_sent - amount of the base token sent
     function revertShares(AppStorage storage _s) internal returns (uint _total_base_sent) {
         uint _total_base = address(this).balance;
         //loop through owners and send shares to them
