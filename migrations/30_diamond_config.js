@@ -1,7 +1,8 @@
 const fs = require("fs");
 const Diamond = artifacts.require('Diamond')
 // let BEACON_ADDR = "0x8422d0922d3bde86a8A96461Bcd3c301b8588860";
-let BEACON_ADDR = "0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2";
+// let BEACON_ADDR = "0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2"; //stage
+let BEACON_ADDR = "0x500fad360BC10ec706974b999b5f0D615C59fEb7"; //beta
 
 // let BEACON_ABI = [{"inputs": [{"internalType": "string","name": "_exchange","type": "string"},{"internalType": "address","name": "_replacement_logic_contract","type": "address"},{"internalType": "uint256","name": "_start","type": "uint256"}],"name": "setExchange","outputs": [],"stateMutability": "nonpayable","type": "function"}];
 let BEACON_ABI = JSON.parse(fs.readFileSync("../../combine_pools/abi/combine_beacon.json","utf-8"))["abi"];
@@ -20,14 +21,15 @@ function sleep(ms) {
 
 module.exports = async function(deployer, network, accounts) {
 
-    let deployedDiamond = await Diamond.deployed()
-    console.log("Setting MEP to " + deployedDiamond.address);
-    let diamond_addr = deployedDiamond.address;
-    // let diamond_addr = "0xc296440aCA127746e8034425C409d8339B51E220";    
+    // let deployedDiamond = await Diamond.deployed()
+    // let diamond_addr = deployedDiamond.address;
+    // let deployedDiamond ={address: "0xc296440aCA127746e8034425C409d8339B51E220"};    
+    let deployedDiamond = {address: "0xfc74d0202702eead690f7e7e8f58f432f01d9bcf"} //beta
 
+    console.log("Setting MEP to " + deployedDiamond.address);
     let beacon = new web3.eth.Contract(BEACON_ABI,BEACON_ADDR)
 
-    await beacon.methods.setExchange(CONTRACT_TYPE, diamond_addr, 0).send({from: OWNER_ADDR,gas:150000})
+    await beacon.methods.setExchange(CONTRACT_TYPE, deployedDiamond.address, 0).send({from: OWNER_ADDR,gas:150000})
     await beacon.methods.setAddress("GODUSER",OWNER_ADDR).send({from: OWNER_ADDR});
     await beacon.methods.setAddress("FEECOLLECTOR",FEE_COLLECTOR).send({from: OWNER_ADDR});
 }
