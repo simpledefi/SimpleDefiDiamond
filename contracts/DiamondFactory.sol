@@ -161,13 +161,15 @@ contract DiamondFactory {
         return address(proxy);
     }
 
-
+    ///@notice update all the facets of contracts that are deployed
+    ///@param iFC - structure with facet signatures, and command (add/update/delete)
     function updateFacets(IDiamondCut.FacetCut[] memory iFC) external godUser {    
         address sourceAddr = prBeacon(beaconContract).getExchange("MULTIEXCHANGEPOOLED");
+        require(sourceAddr != address(0),"Source diamond must be configured");
+        iApp(sourceAddr).updateFacets(iFC);
 
         for (uint i = 0;i<proxyContractsUsers.length;i++) {
             if (proxyContracts[proxyContractsUsers[i]].length > 0) {
-                iApp(sourceAddr).updateFacets(iFC);
                 for (uint t = 0; t < proxyContracts[proxyContractsUsers[i]].length;t++) {
                     address _c =  proxyContracts[proxyContractsUsers[i]][t];
                     iApp(_c).updateFacets(iFC);
@@ -176,6 +178,7 @@ contract DiamondFactory {
 
         }
     }
+
 
     ///@notice generates an address of a new proxy contract
     ///@dev used in front end
