@@ -371,10 +371,11 @@ library sdPoolUtil {
         return (amountTokenA, amountTokenB);
     }
 
-    //@notice helper function to add liquidity to the pool
+    ///@notice helper function to add liquidity to the pool
     ///@param _s - AppStorage structure
-    //@param _amount0 - amount of token0 to add to the pool
-    //@param _amount1 - amount of token1 to add to the pool    
+    ///@param amount0 - amount of token0 to add to the pool
+    ///@param amount1 - amount of token1 to add to the pool    
+    ///@param _deposit - execute deposit functionality into the pool 
     ///@return liquidity - amount of liquidity added to the pool
     function addLiquidity(AppStorage storage _s,uint amount0, uint amount1, bool _deposit) external returns (uint liquidity){
         uint amountA;
