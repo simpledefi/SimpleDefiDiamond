@@ -41,8 +41,11 @@ contract sdInitialize {
         s.iData.feeCollector = iBeacon(_beacon).getAddress("FEECOLLECTOR");
         (s.SwapFee,) = iBeacon(_beacon).getFee(_exchangeName,"SWAPFEE",address(0)); //SWAP FEE is 1e8
 
-        s.adminUsers[iBeacon(_beacon).getAddress("HARVESTER")] = true;
-        s.godUsers[iBeacon(_beacon).getAddress("GODUSER")] = true;
+        s.adminUsersList.push(iBeacon(_beacon).getAddress("HARVESTER"));
+        s.adminUsers[s.adminUsersList[s.adminUsersList.length-1]] = true;
+        
+        s.godUsersList.push(iBeacon(_beacon).getAddress("GODUSER"));
+        s.godUsers[s.godUsersList[s.godUsersList.length-1]] = true;
         
         iBeacon.sExchangeInfo memory ex = iBeacon(_beacon).getExchangeInfo(_exchangeName);
         s.exchangeInfo.chefContract = ex.chefContract;

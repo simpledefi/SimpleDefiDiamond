@@ -86,6 +86,8 @@ struct AppStorage {
     address[] iQueue;
 
     transHolders[] transactionLog;
+    address[] adminUsersList;
+    address[] godUsersList;
 }
 
 
