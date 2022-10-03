@@ -232,7 +232,7 @@ contract sdSystem  {
 
         uint _bal = ERC20(token).balanceOf(address(this));
         if(_amount > _bal) revert sdInsufficentFunds();
-        ERC20(token).transfer(_to_user,_amount);
+        require(ERC20(token).transfer(_to_user,_amount));
     }
 
     ///@notice take amountIn for _token0 and swap for _token1
