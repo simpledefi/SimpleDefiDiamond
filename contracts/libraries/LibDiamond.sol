@@ -106,7 +106,6 @@ library LibDiamond {
     function addFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         require(_functionSelectors.length > 0, "LibDiamondCut: No selectors in facet to cut");
         DiamondStorage storage ds = diamondStorage();
-        // uint16 selectorCount = uint16(diamondStorage().selectors.length);
         require(_facetAddress != address(0), "LibDiamondCut: Add facet can't be address(0)");
         uint16 selectorPosition = uint16(ds.facetFunctionSelectors[_facetAddress].functionSelectors.length);
         // add new facet address if it does not exist
