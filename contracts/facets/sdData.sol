@@ -96,9 +96,9 @@ contract sdData {
     ///@notice helper function to return balance of both tokens in a pair
     ///@return _bal0 is token0 balance
     ///@return _bal1 is token1 balance
-    function tokenBalance() internal view returns (uint ,uint ) {
-        return (ERC20(s.iData.token0).balanceOf(address(this)),ERC20(s.iData.token1).balanceOf(address(this)));
-    }    
+    // function tokenBalance() internal view returns (uint ,uint ) {
+    //     return (ERC20(s.iData.token0).balanceOf(address(this)),ERC20(s.iData.token1).balanceOf(address(this)));
+    // }    
 
     ///@notice Return information on pool holdings based on user
     ///@param _user address of the user
