@@ -216,7 +216,6 @@ library sdPoolUtil {
             for(uint i = 0; i < _s.iQueue.length;i++) {
                 address _user = _s.iQueue[i];
                 
-                // (uint _units, uint share, uint feeAmount) = calcAmount(_self,_holders,[_user,_beacon], [_amount[0],_amount[1],fee],check_fee);
                 (uint[4] memory _rv) = calcAmount(_s,_user, [_amount[0],_amount[1],fee],check_fee);
                 if (_rv[3] > 0){
                     _send[cnt++] = sendQueue(_user, _rv[3]);
@@ -247,7 +246,6 @@ library sdPoolUtil {
 
     function calcAmount(AppStorage storage _s,address _user, uint[3] memory _amt, bool check_fee) internal returns (uint[4] memory _rv) {
         //Since user cannot call this function, and parent functions (harvest, and system_liquidate) lock to prevent re-execution,  re-enterancy is not a concern
-        //_addr[1] = _s.iData.beaconContract;
         uint discount; 
 
         uint _amount = _amt[0];
@@ -291,7 +289,6 @@ library sdPoolUtil {
             _s.iHolders[_user].accumulatedRewards += tokenShare - ((tokenShare * fee)/100e18);
         }
         else { // If liquidated send share back to user
-            // payable(_user).transfer(_rv[1]);
             _rv[3] += _rv[1];
         }
         emit distContrib_evt(_user, _rv[0], _rv[1], _rv[2]);
@@ -308,7 +305,6 @@ library sdPoolUtil {
             address _user = _s.iQueue[i-1];
             _total += _s.iHolders[_user].amount;
         }                    
-        // _s.iData.dust += 1;
 
         return (_total, _s.iData.poolTotal , _s.iData.depositTotal, _s.iData.withdrawTotal);
     }
@@ -323,10 +319,6 @@ library sdPoolUtil {
 
     function getUserInfo(AppStorage storage _s, address _user) public view returns (uint _amount, uint _depositDate, uint _units, uint _accumulatedRewards) {
         _units = calcUnits(_s, _user,false);        
-        // (uint _lpBal,) = iMasterChef(chefContract).userInfo(_s.iData.poolId,address(this));
-        // uint _units_amount = calcUnits(_self, _holders, _user,true); // _units_amount must return not based on time in pool, but overall total        
-        // _amount = (_lpBal * _units_amount)/1e18;
-
         _amount = _s.iHolders[_user].amount;
 
         _depositDate = _s.iHolders[_user].depositDate;
