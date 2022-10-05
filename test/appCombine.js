@@ -16,31 +16,32 @@ const _salt = function() {return  (Math.random()*1e18).toString();};
 
 contract('simpleDefi', accounts => {
 
-    let HARVEST_ADDR = "0x6492830c2292381CcF3D439ea70a2Bfbc1a52cd9";
-    let OWNER_ADDR = "0x42a515c1EDB651F4c69c56E05578D2805D6451eB";
+    let HARVEST_ADDR = "0x42a515c1EDB651F4c69c56E05578D2805D6451eB";
+    let OWNER_ADDR = "0x0e0435B1aB9B9DCddff2119623e25be63ef5CB6e";
+    let GOD_ADDR = "0x0e0435B1aB9B9DCddff2119623e25be63ef5CB6e";// accounts[0];
     let exchange, pool_ID, n_pool_ID
     let app
     let app2
 
     it('should deploy combineApp with initial Contracts', async () => {
-        await web3.eth.sendTransaction({to:OWNER_ADDR, from:accounts[0], value:web3.utils.toWei("100", "ether")});
-        // let diamondFactory = await DiamondFactory.deployed()
-        let diamondFactory = await DiamondFactory.at("0xf630a8FcD389d12126fb3C99CFea8cD39Ec08566")
-        // console.log(web3.currentProvider);        
-        // exchange = "PANCAKESWAP";
-        // pool_ID = 2;
+        let diamondFactory = await DiamondFactory.deployed()
+        // // let diamondFactory = await DiamondFactory.at("0xf630a8FcD389d12126fb3C99CFea8cD39Ec08566")
+        // // console.log(web3.currentProvider);        
+        // // exchange = "PANCAKESWAP";
+        // // pool_ID = 2;
         pool_ID = 3;
         exchange = 'PANCAKESWAP';
-        let tx = await diamondFactory.initialize(pool_ID,exchange,1,_salt(),{from: OWNER_ADDR})
+        let tx = await diamondFactory.initialize(pool_ID,exchange,1,_salt(),{from: accounts[0]})
         app2 = new App(tx,OWNER_ADDR,web3);
-    
-
+        
+        
         n_pool_ID = 2;
         let n_exchange = 'PANCAKESWAP'
-        let tx2 = await diamondFactory.initialize(n_pool_ID,n_exchange,1,_salt(),{from: OWNER_ADDR})
+        let tx2 = await diamondFactory.initialize(n_pool_ID,n_exchange,1,_salt(),{from: accounts[0]})
         app = new App(tx2,OWNER_ADDR,web3);
-
+        
         console.log("Done deploy")
+        await web3.eth.sendTransaction({to:OWNER_ADDR, from:accounts[9], value:web3.utils.toWei("100", "ether")});
      });    
 
     it("Should set the pool ID", async() => {
@@ -55,7 +56,7 @@ contract('simpleDefi', accounts => {
 
     it("Should not allow reinitialization", async() => {
         try {
-            await app.initialize(3, BEACON_ADDR,  'PANCAKESWAP', accounts[0]);
+            await app.initialize(3, BEACON_ADDR,  'PANCAKESWAP', GOD_ADDR);
             assert(false, "Allowed Reinitialization");
         } catch (e) {
              console.log("Blocked Reinitialization");
@@ -74,8 +75,8 @@ contract('simpleDefi', accounts => {
 
     it ("Should allow admin to add a harvester",async() => {
         try{
-            await app.addAdmin(accounts[0],OWNER_ADDR);
-            await app.addAdmin(accounts[3],OWNER_ADDR);
+            await app.addAdmin(GOD_ADDR,OWNER_ADDR);
+            await app.addAdmin(HARVEST_ADDR,OWNER_ADDR);
         }
         catch(e) {
             console.log(e);
@@ -118,7 +119,7 @@ contract('simpleDefi', accounts => {
 
         console.log("Before Harvest");
         try {
-            tx = await app.harvest(accounts[0]); //.call({from: accounts[0]});            
+            tx = await app.harvest(HARVEST_ADDR); //.call({from: accounts[0]});            
             // app.dumpLogs(tx);
             let fee1 = await web3.eth.getBalance(HARVEST_ADDR);
             console.log("Fees:",fee0,fee1);
@@ -162,7 +163,7 @@ contract('simpleDefi', accounts => {
         await app.updatePool(parseInt(pid['poolId']));
         let pc0 = await app.pendingReward();
         console.log("PC0 - harvest:", pc0.toString());
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         let userinfo0_1 = await app.userInfo(accounts[0]);
         let userinfo1_1 = await app.userInfo(accounts[1]);
 
@@ -207,7 +208,7 @@ contract('simpleDefi', accounts => {
             await app.updatePool(parseInt(pid['poolId']));  
 
         console.log("after updatepool");
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         await app.audit("Liquidate After Harvest");
 
     });
@@ -226,7 +227,7 @@ contract('simpleDefi', accounts => {
 
         let userinfo0_1 = await app.userInfo(accounts[1]);
         console.log(accounts[0], JSON.stringify(userinfo0_1));
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         await app.audit("Deposit 10 accounts");
 
     });
@@ -236,7 +237,7 @@ contract('simpleDefi', accounts => {
         for (let i = 0; i < 10; i++) 
             await app.updatePool(parseInt(pid['poolId']));
 
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         await app.audit("Allocate next harvest to all users");
     });
 
@@ -264,7 +265,7 @@ contract('simpleDefi', accounts => {
         await app.updatePool(parseInt(pid['poolId']));
         await app.updatePool(parseInt(pid['poolId']));
         await app.audit(app,"Before Harvest");
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         await app.audit(app,"Update a bunch of blocks, and liquidate a user in the middle");
     });
 
@@ -279,7 +280,7 @@ contract('simpleDefi', accounts => {
 
     it("Should check audit info", async () => {
         // assert(auditinfo[0].toString() == auditinfo[1].toString(),"totals should be equal")
-        await app.harvest(OWNER_ADDR);
+        await app.harvest(HARVEST_ADDR);
         await app.audit("Final Audit");
     });
 

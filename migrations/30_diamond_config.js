@@ -21,10 +21,9 @@ function sleep(ms) {
 
 module.exports = async function(deployer, network, accounts) {
 
-    // let deployedDiamond = await Diamond.deployed()
-    // let diamond_addr = deployedDiamond.address;
+    let deployedDiamond = await Diamond.deployed()
     // let deployedDiamond ={address: "0xc296440aCA127746e8034425C409d8339B51E220"};    
-    let deployedDiamond = {address: "0xfc74d0202702eead690f7e7e8f58f432f01d9bcf"} //beta
+    // let deployedDiamond = {address: "0xfc74d0202702eead690f7e7e8f58f432f01d9bcf"} //beta
 
     console.log("Setting MEP to " + deployedDiamond.address);
     let beacon = new web3.eth.Contract(BEACON_ABI,BEACON_ADDR)

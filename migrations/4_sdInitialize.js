@@ -26,8 +26,8 @@ module.exports = async function (deployer, network, accounts) {
     console.log("sdInitialize");
     await deployer.deploy(sdInitialize, {from: GOD_ADDR});
 
-    // let diamond = await Diamond.deployed()
-    let diamond = {address: "0xfc74d0202702eead690f7e7e8f58f432f01d9bcf"}
+    let diamond = await Diamond.deployed()
+    // let diamond = {address: "0xfc74d0202702eead690f7e7e8f58f432f01d9bcf"}
 
     console.log("DIAOMOND ADDRESS: " + diamond.address)
     let diamondCutFacet = new web3.eth.Contract(DiamondCutFacet.abi, diamond.address)
