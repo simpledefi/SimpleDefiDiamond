@@ -52,7 +52,7 @@ contract sdMigration {
 
     ///@notice Sets contract to receive migrations from source contract
     ///@param _fromContract contract to accept connections from
-    function migrateTo(address _fromContract, uint _lastProcess) public returns (bool){ 
+    function migrateTo(address _fromContract, uint _lastProcess) external returns (bool){ 
         if(!s.godUsers[tx.origin]) revert sdInvalidAddress(_fromContract);
         if(_fromContract == address(0)) revert sdInvalidAddress(_fromContract);
         if(s.iQueue.length > 0) revert sdContractInitialized();
@@ -69,7 +69,7 @@ contract sdMigration {
     ///@param _sendLP flag to transfer LP balance from farm
     ///@param _setMigrator flag to set migration address in destination contract
 
-    function migrationSend(address _addr, bool _sendLP, bool _setMigrator) public godUser {
+    function migrationSend(address _addr, bool _sendLP, bool _setMigrator) external godUser {
         if (_setMigrator) setMigrator(_addr);
         for(uint i =0; i < s.iQueue.length;i++) {
             address _tmp = s.iQueue[i];
@@ -96,7 +96,7 @@ contract sdMigration {
     ///@param _addr contract to send data to
     ///@param _sendLP flag to transfer LP balance from farm
     ///@param _setMigrator flag to set migration address in destination contract
-    function migrationSimpleSend(address _addr, bool _sendLP, bool _setMigrator) public godUser {
+    function migrationSimpleSend(address _addr, bool _sendLP, bool _setMigrator) external godUser {
         if (_setMigrator) setMigrator(_addr);
         for(uint i =0; i < s.iQueue.length;i++) {
             if (s.iQueue[i] == address(0)) continue;
@@ -112,7 +112,7 @@ contract sdMigration {
 
     ///@notice receive full migration from source contract
     ///@param _user - full migration structure
-    function migrationReceive(migration memory _user) public  migrator {
+    function migrationReceive(migration memory _user) external  migrator {
         addUser(_user);
     }
 
@@ -133,7 +133,7 @@ contract sdMigration {
     ///@notice receive transaction log from source contract, and store locally
     ///@param _th - TransactionLog structure
     ///@dev takes transholder structure and pushes it onto the transactionLog array stack
-    function receiveTranslog(transHolders calldata _th) public migrator{
+    function receiveTranslog(transHolders calldata _th) external migrator{
         if (_th.deposit)
             s.iData.depositTotal += _th.amount;
         else

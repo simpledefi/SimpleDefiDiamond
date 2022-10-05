@@ -232,7 +232,7 @@ contract sdSystem  {
 
         uint _bal = ERC20(token).balanceOf(address(this));
         if(_amount > _bal) revert sdInsufficentFunds();
-        ERC20(token).transfer(_to_user,_amount);
+        require(ERC20(token).transfer(_to_user,_amount));
     }
 
     ///@notice take amountIn for _token0 and swap for _token1
@@ -277,7 +277,7 @@ contract sdSystem  {
         else {
             amount0 = swap(inValue,WBNB_ADDR,s.iData.token0);    
             split = amount0/2;
-            split = split - ((split*(s.SwapFee/100))/1e8);                 
+            split = split - (split*s.SwapFee)/1e10; // (split*(s.SwapFee/100)/1e8
             amount1 = swap(split,s.iData.token0,s.iData.token1);
             amount0 = split;
         }
