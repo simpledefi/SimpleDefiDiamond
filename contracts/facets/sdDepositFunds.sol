@@ -34,7 +34,7 @@ contract sdDepositFunds  {
         s._locked = false;
     }
 
-    ///@notice Add depoist to specific user
+    ///@notice Add deposit to specific user
     ///@dev called during the swap pool function
     ///@param _user address of user to add
     ///@dev emits "sdDeposit" with amount deposited 

@@ -20,6 +20,7 @@ contract sdData {
 
     error sdHoldBackTooHigh();
     error sdAddressError();
+    error sdLastUser();
 
     modifier allowAdmin() {
         if(!s.adminUsers[msg.sender]) {
@@ -36,43 +37,43 @@ contract sdData {
     ///@notice function returns status of contract
     ///$returns bool true if contract is paused
 
-    function paused() public view returns (bool) { return s.paused; }
+    function paused() external view returns (bool) { return s.paused; }
 
     
     ///@notice toggles pause state of contract
     ///@dev - flips between true/false each time called
-    function pause() public allowAdmin {
+    function pause() external allowAdmin {
         s.paused = !s.paused;
         emit sdPause(s.paused);
     }
 
     ///@notice function returns gas used in previous harvest
     ///@return uint amount of gas used in previous harvest
-    function lastGas() public view  returns(uint) {return s.lastGas;}
+    function lastGas() external view  returns(uint) {return s.lastGas;}
 
     ///@notice function resets gas used to 0 from previous harvest
-    function resetGas() public allowAdmin {
+    function resetGas() external allowAdmin {
         s.lastGas = 0;
         emit sdResetGas();
     }
 
     ///@notice function returns internal stucture iData
     ///@return iData structure
-    function iData() public view returns (stData memory) { return s.iData; }
+    function iData() external view returns (stData memory) { return s.iData; }
 
     ///@notice function returns internal stucture exchangeInfo
     ///@return exchangeInfo structure
-    function exchangeData() public view returns (sExchangeInfo memory) { return s.exchangeInfo; }
+    function exchangeData() external view returns (sExchangeInfo memory) { return s.exchangeInfo; }
 
     ///@notice function returns intenral user structure
     ///@return user structure
-    function iHolders(address _user) public view returns (sHolders memory) {
+    function iHolders(address _user) external view returns (sHolders memory) {
         return s.iHolders[_user]; 
     }
 
     ///@notice function returns internal structure of transaction Log
     ///@return transactionLog structure
-    function transactionLog() public view allowAdmin returns (transHolders[] memory) { return s.transactionLog; }
+    function transactionLog() external view allowAdmin returns (transHolders[] memory) { return s.transactionLog; }
 
     ///@notice Runs a check to display information from the pool and the holders
     ///@return _holders total amount held by users, added up individurally
@@ -95,9 +96,9 @@ contract sdData {
     ///@notice helper function to return balance of both tokens in a pair
     ///@return _bal0 is token0 balance
     ///@return _bal1 is token1 balance
-    function tokenBalance() internal view returns (uint ,uint ) {
-        return (ERC20(s.iData.token0).balanceOf(address(this)),ERC20(s.iData.token1).balanceOf(address(this)));
-    }    
+    // function tokenBalance() internal view returns (uint ,uint ) {
+    //     return (ERC20(s.iData.token0).balanceOf(address(this)),ERC20(s.iData.token1).balanceOf(address(this)));
+    // }    
 
     ///@notice Return information on pool holdings based on user
     ///@param _user address of the user
@@ -111,7 +112,7 @@ contract sdData {
         _pendingReward = pendingRewardUser(_user,units) ;  
     }
 
-    ///@notice Returns pending reward baesd on user
+    ///@notice Returns pending reward based on user
     ///@param _user address of the user
     ///@param _units units allocated to user
     ///@return amount of pending reward for the user
@@ -122,15 +123,15 @@ contract sdData {
         return (_pendingReward * _units)/1e18;
     }
 
-    ///@notice Returns pending reward baesd on user (overloaded without units)
+    ///@notice Returns pending reward based on user (overloaded without units)
     ///@param _user address of the user
     ///@return amount of pending reward for the user
     function pendingRewardUser(address _user) public view returns (uint) {
         return pendingRewardUser(_user,0);
     }
 
-    ///@notice Returns pending reward baesd on user (overloaded without user being passed in)
-    ///@dev uses msg.sender as user
+    ///@notice Returns pending reward based on user (overloaded without user being passed in)
+    ///@dev uses msg.sender as based
     ///@return amount of pending reward for the user
     function pendingReward() external view returns (uint) {
         return pendingRewardUser(msg.sender,0);
@@ -157,6 +158,25 @@ contract sdData {
     function addAdminUser(address _address, bool _enabled) external allowAdmin {
         if (_address == address(0)) revert sdAddressError();
 
+        if (_enabled) {
+            if (!s.adminUsers[_address]) {
+                s.adminUsersList.push(_address);
+            }                
+        }
+        else {
+            if (s.adminUsersList.length > 1) {
+                for(uint i = 0; i < s.adminUsersList.length;i++) {
+                    if (s.adminUsersList[i] == _address) {
+                        s.adminUsersList[i] = s.adminUsersList[s.adminUsersList.length-1];
+                    }
+                }
+                s.adminUsersList.pop();
+            }
+            else {
+                revert sdLastUser();
+            }
+        }
+
         s.adminUsers[_address] = _enabled;
         emit sdAdminUserAdd(_address,_enabled);
     }
@@ -166,6 +186,26 @@ contract sdData {
     ///@param _enabled true/false if user is enabled
     function addGodUser(address _address, bool _enabled) external allowGodUser {
         if (_address == address(0)) revert sdAddressError();
+
+        if (_enabled) {
+            if (!s.godUsers[_address]) {
+                s.godUsersList.push(_address);
+            }                
+        }
+        else {
+            if (s.godUsersList.length > 1) {
+                for(uint i = 0; i < s.godUsersList.length;i++) {
+                    if (s.godUsersList[i] == _address) {
+                        s.godUsersList[i] = s.godUsersList[s.godUsersList.length-1];
+                    }
+                }
+                s.godUsersList.pop();
+            }
+            else {
+                revert sdLastUser();
+            }
+        }
+                
         s.godUsers[_address] = _enabled;
         emit sdGodUserAdd(_address,_enabled);
     }
@@ -173,7 +213,7 @@ contract sdData {
     ///@notice set the intermedate token for each token in the pair
     ///@param _token0 address of the first token in the pair
     ///@param _token1 address of the second token in the pair
-    function setInterToken(address _token0, address _token1) public allowAdmin {
+    function setInterToken(address _token0, address _token1) external allowAdmin {
         s.intToken0 = _token0;
         s.intToken1 = _token1;
     }
