@@ -24,8 +24,9 @@ contract('simpleDefi', accounts => {
 
     it('should deploy combineApp with initial Contracts', async () => {
         let diamondFactory = await DiamondFactory.deployed()
-        pool_ID = 2;
-        exchange = 'PANCAKESWAP'
+        // pool_ID = 28;
+        pool_ID = 47;
+        exchange = 'BABYSWAP'
         let tx = await diamondFactory.initialize(pool_ID,exchange,1,_salt(),{from: accounts[0]})
         app = new App(tx,OWNER_ADDR,web3);
     
@@ -33,10 +34,10 @@ contract('simpleDefi', accounts => {
         console.log("Balance 0:", bal0);
     });    
 
-
     it("Should handle deposit", async() => {
+        console.log("Before Deposit");
         bal0 = await web3.eth.getBalance(accounts[2]);
-        let tx = await app.deposit(accounts[2], deposit_amount);
+        let tx = await app.deposit(accounts[2], deposit_amount,0);
         console.log("After Deposit");
         let userinfo = await app.userInfo(accounts[1]);
         console.log(JSON.stringify(userinfo));

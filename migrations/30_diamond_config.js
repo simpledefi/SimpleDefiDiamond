@@ -2,7 +2,9 @@ const fs = require("fs");
 const Diamond = artifacts.require('Diamond')
 // let BEACON_ADDR = "0x8422d0922d3bde86a8A96461Bcd3c301b8588860";
 // let BEACON_ADDR = "0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2"; //stage
-let BEACON_ADDR = "0x500fad360BC10ec706974b999b5f0D615C59fEb7"; //beta
+//let BEACON_ADDR = "0x500fad360BC10ec706974b999b5f0D615C59fEb7"; //beta
+let BEACON_ADDR = "0x6d2A307e32aE2D33181Dd6A955386d872836B610"; //stage 2
+
 
 // let BEACON_ABI = [{"inputs": [{"internalType": "string","name": "_exchange","type": "string"},{"internalType": "address","name": "_replacement_logic_contract","type": "address"},{"internalType": "uint256","name": "_start","type": "uint256"}],"name": "setExchange","outputs": [],"stateMutability": "nonpayable","type": "function"}];
 let BEACON_ABI = JSON.parse(fs.readFileSync("../../combine_pools/abi/combine_beacon.json","utf-8"))["abi"];

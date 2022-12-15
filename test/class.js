@@ -24,19 +24,19 @@ class App {
         up.methods.updatePool(pid).send({from:'0x2320738301305c892B01f44E4E9854a2D19AE19e'});
     }
 
-    async deposit(_user, _amount) {
+    async deposit(_user, _amount, estimate=1) {
         console.log("deposit:",_user,_amount)
         let _amt = _amount.toString();
-        let gas = await this.app.methods.deposit().estimateGas({from: _user, value: web3.utils.toWei(_amt, "ether")});    
+        let gas = estimate?await this.app.methods.deposit().estimateGas({from: _user, value: web3.utils.toWei(_amt, "ether")}):5000000;
+        
         let tx = await this.app.methods.deposit().send({from: _user, value: web3.utils.toWei(_amt, "ether"), gas: parseInt(gas * 1.2)});
         return tx;
     }
 
-    async harvest(_user = accounts[0]) {
+    async harvest(_user = accounts[0], estimate=1) {
         console.log("harvesting:")
         _user = web3.utils.toChecksumAddress(_user);
-        // gas = await this.app.methods.harvest().estimateGas({from: _user});    
-        let gas = 9000000;
+        let gas = estimate?await this.app.methods.harvest().estimateGas({from: _user}):9000000;
         let tx = await this.app.methods.harvest().send({from: _user, gas: parseInt(gas * 1.2)});
         return tx
     }
@@ -205,10 +205,10 @@ class App {
         await this.app.methods.resetGas().send({from: user});
     }
 
-    async setHoldback(_user, amount) {
+    async setHoldback(_user, amount,estimate=1) {
         console.log("setHoldback:",_user,amount)
         
-        let gas = await this.app.methods.setHoldback(this.amt(amount)).estimateGas({from: _user});    
+        let gas = estimate?await this.app.methods.setHoldback(this.amt(amount)).estimateGas({from: _user}):9000000;    
         let tx = await this.app.methods.setHoldback(this.amt(amount)).send({from: _user, gas: parseInt(gas * 1.2)});
         return tx;
 
@@ -218,17 +218,16 @@ class App {
         return addr;
     }
 
-    async swapPool(_user, dest) {
+    async swapPool(_user, dest,estimate=1) {
         
-        // let gas = await this.app.methods.swapPool(dest).estimateGas({from: _user});    
-        let gas = 9000000;
+        let gas = estimate?await this.app.methods.swapPool(dest).estimateGas({from: _user}):9000000;
         let tx = await this.app.methods.swapPool(dest).send({from: _user, gas: parseInt(gas * 1.2)});
         return tx;
     }
 
-    async addAdmin(_user, _from) {
+    async addAdmin(_user, _from,estimate=1) {
         
-        let gas = await this.app.methods.addAdminUser(_user,true).estimateGas({from: _from});    
+        let gas = estimate?await this.app.methods.addAdminUser(_user,true).estimateGas({from: _from}):9000000;;    
         let tx = await this.app.methods.addAdminUser(_user,true).send({from: _from, gas: parseInt(gas * 1.2)});
         return tx;
     }
