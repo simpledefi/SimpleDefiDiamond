@@ -409,7 +409,7 @@ library sdPoolUtil {
         uint pathLength = 2;
         address intermediateToken;
 
-        if (_s.exchangeInfo.intermediateToken != address(0)) {
+        if (_s.exchangeInfo.intermediateToken != address(0) && (_s.exchangeInfo.intermediateToken != _s.iData.token0 && _s.exchangeInfo.intermediateToken  != _s.iData.token1)) {
             intermediateToken = _s.exchangeInfo.intermediateToken;
             pathLength = 3;
         }
