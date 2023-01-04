@@ -87,6 +87,34 @@ contract DiamondFactory {
         proxyContracts[_user].push(_proxyContract);
     }
 
+    ///@notice Allows admin to remove an existing proxy contract to the list of proxy contracts for a user
+    ///@param _proxyContract the address of the proxy contract
+    ///@param _user the address of the user
+    function removeProxy(address _proxyContract, address _user) external {
+        require(_proxyContract != address(0), "Proxy Contract required");
+        require(_user != address(0), "User required");
+        for (uint i = 0; i < proxyContracts[_user].length;i++) {
+            if (proxyContracts[_user].length>1) {
+                if (proxyContracts[_user][i] == _proxyContract) {
+                    proxyContracts[_user][i] = proxyContracts[_user][proxyContracts[_user].length-1];
+                    proxyContracts[_user].pop();
+                    break;
+                }
+            }
+        }
+        if (proxyContracts[_user].length == 0) {
+            if(proxyContractsUsers.length > 1) {
+                for(uint i = 0; i < proxyContractsUsers.length;i++) {
+                    if (proxyContractsUsers[i] == _user) {
+                        proxyContractsUsers[i] = proxyContractsUsers[proxyContractsUsers.length-1];
+                        break;
+                    }
+                }
+            }
+            proxyContractsUsers.pop();
+        }
+    }
+
     ///@notice Allows admin to add multiple  proxy contracts to the list of proxy contracts for a user
     ///@param _proxyContract the array of address for proxy contracts
     ///@param _user the address of the user
