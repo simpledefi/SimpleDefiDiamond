@@ -939,10 +939,10 @@
         }
       }
     },
-    "lib/solidity-stringutils/src/strings.sol": {
-      "lastModificationDate": 1667394592149,
-      "contentHash": "a35219f3ed241165477dabdfe496165a",
-      "sourceName": "lib/solidity-stringutils/src/strings.sol",
+    "lib/solidity-stringutils/strings.sol": {
+      "lastModificationDate": 1672844688804,
+      "contentHash": "9fa683cf47996e63e2b995e0a9dafce7",
+      "sourceName": "lib/solidity-stringutils/strings.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -975,13 +975,13 @@
       "versionRequirement": "^0.8.0",
       "artifacts": {
         "strings": {
-          "0.8.13+commit.abaa5c0e.Linux.gcc": "src/strings.sol/strings.json"
+          "0.8.13+commit.abaa5c0e.Linux.gcc": "strings.sol/strings.json"
         }
       }
     },
     "script/deployDiamond.s.sol": {
-      "lastModificationDate": 1671985440687,
-      "contentHash": "ef234157ebd0c7df33638e1fe6cb133b",
+      "lastModificationDate": 1672849700814,
+      "contentHash": "477040ff9aafbb4402e3406191db2a11",
       "sourceName": "script/deployDiamond.s.sol",
       "solcConfig": {
         "settings": {
@@ -1033,7 +1033,7 @@
         "lib/openzeppelin-contracts/contracts/utils/Context.sol",
         "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
         "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
-        "lib/solidity-stringutils/src/strings.sol",
+        "lib/solidity-stringutils/strings.sol",
         "src/Diamond.sol",
         "src/DiamondFactory.sol",
         "src/facets/DiamondCutFacet.sol",
@@ -1067,8 +1067,8 @@
       }
     },
     "script/deployDiamondFactory.s.sol": {
-      "lastModificationDate": 1668016871219,
-      "contentHash": "061386b6198558beef10493033c6f86f",
+      "lastModificationDate": 1672854281464,
+      "contentHash": "64f3dfcf1dbd5e635e541159f6f86b27",
       "sourceName": "script/deployDiamondFactory.s.sol",
       "solcConfig": {
         "settings": {
@@ -1113,6 +1113,8 @@
         "lib/forge-std/src/Vm.sol",
         "lib/forge-std/src/console.sol",
         "lib/forge-std/src/console2.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+        "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
         "src/Diamond.sol",
         "src/DiamondFactory.sol",
         "src/interfaces/IDiamondCut.sol",
@@ -1123,8 +1125,72 @@
       ],
       "versionRequirement": "^0.8.13",
       "artifacts": {
-        "DeployScript": {
-          "0.8.13+commit.abaa5c0e.Linux.gcc": "deployDiamondFactory.s.sol/DeployScript.json"
+        "deployDiamondFactoryScript": {
+          "0.8.13+commit.abaa5c0e.Linux.gcc": "deployDiamondFactory.s.sol/deployDiamondFactoryScript.json"
+        }
+      }
+    },
+    "script/migrateDiamond.s.sol": {
+      "lastModificationDate": 1672857521314,
+      "contentHash": "2fa58fde9f79d4b7195ad255c10e1d6c",
+      "sourceName": "script/migrateDiamond.s.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Common.sol",
+        "lib/forge-std/src/Components.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/StdAssertions.sol",
+        "lib/forge-std/src/StdCheats.sol",
+        "lib/forge-std/src/StdError.sol",
+        "lib/forge-std/src/StdJson.sol",
+        "lib/forge-std/src/StdMath.sol",
+        "lib/forge-std/src/StdStorage.sol",
+        "lib/forge-std/src/StdUtils.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+        "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+        "src/Diamond.sol",
+        "src/DiamondFactory.sol",
+        "src/interfaces/IDiamondCut.sol",
+        "src/interfaces/IDiamondLoupe.sol",
+        "src/interfaces/IERC165.sol",
+        "src/interfaces/IERC173.sol",
+        "src/libraries/LibDiamond.sol"
+      ],
+      "versionRequirement": "^0.8.13",
+      "artifacts": {
+        "migrateFactoryScript": {
+          "0.8.13+commit.abaa5c0e.Linux.gcc": "migrateDiamond.s.sol/migrateFactoryScript.json"
         }
       }
     },
@@ -1175,8 +1241,8 @@
       }
     },
     "src/DiamondFactory.sol": {
-      "lastModificationDate": 1664891830911,
-      "contentHash": "f769aab234f6dfa572a586e71dd5764c",
+      "lastModificationDate": 1672843231934,
+      "contentHash": "c6e60e87187905d9ffc7e720435ab918",
       "sourceName": "src/DiamondFactory.sol",
       "solcConfig": {
         "settings": {
@@ -2051,7 +2117,7 @@
         "lib/forge-std/src/Vm.sol",
         "lib/forge-std/src/console.sol",
         "lib/forge-std/src/console2.sol",
-        "lib/solidity-stringutils/src/strings.sol"
+        "lib/solidity-stringutils/strings.sol"
       ],
       "versionRequirement": "^0.8.7",
       "artifacts": {
@@ -2061,8 +2127,8 @@
       }
     },
     "test/diamond.t.sol": {
-      "lastModificationDate": 1671916344560,
-      "contentHash": "a41048bfb0646ad78f1d911d5e984e19",
+      "lastModificationDate": 1672849840224,
+      "contentHash": "14376bafcd850bf9f20429ec2a04ed18",
       "sourceName": "test/diamond.t.sol",
       "solcConfig": {
         "settings": {
@@ -2114,7 +2180,7 @@
         "lib/openzeppelin-contracts/contracts/utils/Context.sol",
         "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
         "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
-        "lib/solidity-stringutils/src/strings.sol",
+        "lib/solidity-stringutils/strings.sol",
         "script/deployDiamond.s.sol",
         "src/Diamond.sol",
         "src/DiamondFactory.sol",
@@ -2141,6 +2207,9 @@
         "simpleDefiDiamondTest": {
           "0.8.13+commit.abaa5c0e.Linux.gcc": "diamond.t.sol/simpleDefiDiamondTest.json"
         },
+        "tBeacon": {
+          "0.8.13+commit.abaa5c0e.Linux.gcc": "diamond.t.sol/tBeacon.json"
+        },
         "tMasterchef": {
           "0.8.13+commit.abaa5c0e.Linux.gcc": "diamond.t.sol/tMasterchef.json"
         },
@@ -2150,8 +2219,8 @@
       }
     },
     "tmp/iSimpleDefiDiamond.sol": {
-      "lastModificationDate": 1671818709520,
-      "contentHash": "e4eaa7a51743821822d5891beee797a3",
+      "lastModificationDate": 1672844071784,
+      "contentHash": "23bec9db0e851461528463032a235a8c",
       "sourceName": "tmp/iSimpleDefiDiamond.sol",
       "solcConfig": {
         "settings": {

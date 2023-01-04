@@ -36,14 +36,15 @@ contract deployDiamondScript is Script {
     bool _upgrade;
     bool _verify = false;
 
-    address _beacon = 0x500fad360BC10ec706974b999b5f0D615C59fEb7;
+    // address _beacon = 0x500fad360BC10ec706974b999b5f0D615C59fEb7;// Beta Beacon
+    address _beacon = 0xd94d32a4a79ddE20CB7D58aBcEC697f20Ed0D3d2; //staging beacon
     address _godUser = 0x0e0435B1aB9B9DCddff2119623e25be63ef5CB6e;
     address _adminUser = 0x42a515c1EDB651F4c69c56E05578D2805D6451eB;
 
-    address _contract = 0xD1C9A57cd1B4013b2e1178Fc4AA90CC42338c77b; // DEVELOPMENT
-    // address _contract = 0x0000000000000000000000000000000000000000; // DEVELOPMENT
-
+    address _contract = 0x0000000000000000000000000000000000000000; // DEVELOPMENT
     address _factory = 0x0000000000000000000000000000000000000000; // DEVELOPMENT
+    
+    // address _contract = 0xD1C9A57cd1B4013b2e1178Fc4AA90CC42338c77b; // DEVELOPMENT
     // address _factory = 0x42a515c1EDB651F4c69c56E05578D2805D6451eB; // BETA
     // address _factory = 0x42a515c1EDB651F4c69c56E05578D2805D6451eB; // STAGING
     // address _factory = 0x42a515c1EDB651F4c69c56E05578D2805D6451eB; // PRODUCTION

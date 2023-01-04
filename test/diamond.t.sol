@@ -11,6 +11,10 @@ interface tProxyFactory {
     function initialize(uint64  _pid, string memory _exchange, uint poolType, uint _salt) external returns (address);
 }
 
+interface tBeacon {
+    function setExchangeInfo(string memory _name, address _chefContract, address _routerContract, bool _psV2, address _rewardToken, string memory _pendingCall,address _intermediateToken, address _baseToken, string memory _contractType_solo, string memory _contractType_pooled) external;
+}
+
 interface tMasterchef {
     struct PoolInfo {
         uint256 accCakePerShare;
@@ -30,16 +34,19 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
     address masterchef = 0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652;
     address user = makeAddr("user");
     address invalidUser = makeAddr("invaliduser");
+    string constant EXCHANGE = "BABYSWAPV2";
+    uint64 constant PID = 20;
 
-    constructor() {
+    constructor() {        
+        addBabySwapV2();
         address _d = deployDiamond(false);
         _f = deployFactory(_d,false);
-        // console.log(_d,_f);
+        console.log(EXCHANGE,PID);
         // console.log("Diamond Factory is at:" , _f);
         vm.prank(_godUser);
         vm.deal(user,10 ether);
 
-        appAddr = tProxyFactory(_f).initialize(2,"PANCAKESWAP",1,12345);        
+        appAddr = tProxyFactory(_f).initialize(PID,EXCHANGE,1,12345);        
         // console.log("Deployed at:", appAddr);
     }
 
@@ -67,7 +74,7 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         assertLt(1 ether-_total, 100);
     }
 
-    function test000_Deposit() public {
+    function test000_Deposit() public {        
         (,,uint bal1,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
         deposit(.5 ether);
         (,,uint bal2,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
@@ -79,7 +86,7 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         vm.prank(_godUser);
         vm.expectRevert(SimpleDefiDiamond.sdAlreadyInitialized.selector);
         
-        SimpleDefiDiamond(payable(appAddr)).initialize(3,_beacon,'PANCAKESWAP');
+        SimpleDefiDiamond(payable(appAddr)).initialize(3,_beacon,EXCHANGE);
     }
 
     function test002_LockedFunctions() public {
@@ -97,11 +104,14 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         (,,uint bal1,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
         vm.prank(_adminUser);
         SimpleDefiDiamond(payable(appAddr)).harvest();        
+	console.log("After");
         (,,uint bal2,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
         console.log(bal2,bal1);
         assertGt(bal2,bal1);
 
+        console.log(4);
         uint pc = SimpleDefiDiamond(payable(appAddr)).pendingRewardUser(user);        
+
         console.log("Pending Reward:", pc);
     }
 
@@ -132,7 +142,7 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
     function test006_poolSwap() public {
         deposit(5 ether);
         vm.prank(_godUser);
-        address p2 = tProxyFactory(_f).initialize(3,"PANCAKESWAP",1,123456);        
+        address p2 = tProxyFactory(_f).initialize(3,EXCHANGE,1,123456);        
         (,,uint bal0,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
         (,,uint bal1,,) = SimpleDefiDiamond(payable(p2)).userInfo(user);
         
@@ -294,8 +304,8 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
 
         for (uint i = 1;i<11;i++) {
             (,,uint _tmp,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(vm.addr(i));
-            console.log(vm.addr(i),_tmp,bal[i]);
             assertGt(_tmp,bal[i]);
+            console.log(vm.addr(i),_tmp,bal[i],_tmp-bal[i]);
         }
     }
 
@@ -310,6 +320,20 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         SimpleDefiDiamond(appAddr).liquidate();
     }
 
+
+    function addBabySwapV2() public {
+        vm.prank(_godUser);
+        tBeacon(_beacon).setExchangeInfo(
+            "BABYSWAPV2",
+            0xCb59468d06b812F457C1763738217FB0430842bB,
+            0x325E343f1dE602396E256B67eFd1F61C3A6B38Bd,
+            false,0x53E562b9B7E5E94b81f10e96Ee70Ad06df3D2657,
+            "pendingReward(uint256,address)",
+            0x55d398326f99059fF775485246999027B3197955, 
+            0x0000000000000000000000000000000000000000,
+            'MULTIEXCHANGE',
+            'MULTIEXCHANGEPOOLED');
+    }
 
 
 }
