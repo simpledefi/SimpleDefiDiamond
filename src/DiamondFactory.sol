@@ -40,6 +40,8 @@ contract DiamondFactory {
     
     bool public paused;
 
+    event sdFailedUpdate(address);
+    event sdUpdated(uint);
 
     modifier adminUser {
         require(adminUsers[msg.sender] == true,"Locked function");
@@ -195,16 +197,21 @@ contract DiamondFactory {
         address sourceAddr = prBeacon(beaconContract).getExchange("MULTIEXCHANGEPOOLED");
         require(sourceAddr != address(0),"Source diamond must be configured");
         iApp(sourceAddr).updateFacets(iFC);
-
+        uint cnt;
         for (uint i = 0;i<proxyContractsUsers.length;i++) {
             if (proxyContracts[proxyContractsUsers[i]].length > 0) {
                 for (uint t = 0; t < proxyContracts[proxyContractsUsers[i]].length;t++) {
                     address _c =  proxyContracts[proxyContractsUsers[i]][t];
-                    iApp(_c).updateFacets(iFC);
+                    try iApp(_c).updateFacets(iFC) {
+                        cnt++;
+                    } catch {
+                        emit sdFailedUpdate(_c);
+                    }
                 }
             }
 
         }
+        emit sdUpdated(cnt);
     }
 
 
