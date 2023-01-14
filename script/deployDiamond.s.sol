@@ -215,7 +215,7 @@ contract deployDiamondScript is Script {
         cmd[1] = "verify-contract";
         cmd[2] = Strings.toHexString(uint160(_addr), 20);        
         cmd[3] = _facetName;
-        cmd[4] = "6C9YAI39WV3XAMFE5QFYW6RJI25T138RHW";
+        cmd[4] = vm.envString("BSCSCANAPIKEY");
         cmd[5] = "--verifier-url";
         cmd[6] = "https://api.bscscan.com/api";
 
