@@ -1,13 +1,16 @@
+# Compiler files
+cache/
+out/
+
+# Ignores development broadcast logs
+broadcast
+/broadcast/*/31337/
+/broadcast/**/dry-run/
+
+# Dotenv file
 .env
-node_modules
-build
-.etherlime-store
-coverage
-stuff.txt
-deployment/deploy.js
-.vscode
-bin
-tmp
-abi
+
 *~
-out
+tmp
+bin
+DEADJOE
