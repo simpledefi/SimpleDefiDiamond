@@ -8,6 +8,8 @@ import "./interfaces/IDiamondCut.sol";
 interface iApp {
     function initialize(uint64 _poolId, address _beacon, string memory _exchangeName) external payable;
     function updateFacets(IDiamondCut.FacetCut[] memory iFC) external;
+    function transferOwnership(address _newOwner) external;
+
 }
 
 interface prBeacon {
@@ -92,7 +94,7 @@ contract DiamondFactory {
     ///@notice Allows admin to remove an existing proxy contract to the list of proxy contracts for a user
     ///@param _proxyContract the address of the proxy contract
     ///@param _user the address of the user
-    function removeProxy(address _proxyContract, address _user) external {
+    function removeProxy(address _proxyContract, address _user) external adminUser {
         require(_proxyContract != address(0), "Proxy Contract required");
         require(_user != address(0), "User required");
         for (uint i = 0; i < proxyContracts[_user].length;i++) {
@@ -187,6 +189,7 @@ contract DiamondFactory {
         emit NewProxy(address(proxy), msg.sender);
 
         iApp(address(proxy)).initialize{value:msg.value}(_pid, beaconContract, _exchange);    
+        iApp(address(proxy)).transferOwnership(msg.sender);
         
         return address(proxy);
     }

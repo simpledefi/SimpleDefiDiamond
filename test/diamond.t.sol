@@ -32,10 +32,11 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
     address appAddr;
 
     address masterchef = 0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652;
+
     address user = makeAddr("user");
     address invalidUser = makeAddr("invaliduser");
-    string constant EXCHANGE = "BABYSWAPV2";
-    uint64 constant PID = 20;
+    string constant EXCHANGE = "BISWAP";
+    uint64 constant PID = 7;
 
     constructor() {        
         addBabySwapV2();
@@ -102,6 +103,7 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         deposit(.5 ether);
 
         (,,uint bal1,,) = SimpleDefiDiamond(payable(appAddr)).userInfo(user);
+        uint pc1 = SimpleDefiDiamond(payable(appAddr)).pendingRewardUser(user);        
         vm.prank(_adminUser);
         SimpleDefiDiamond(payable(appAddr)).harvest();        
 	console.log("After");
@@ -110,9 +112,9 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         assertGt(bal2,bal1);
 
         console.log(4);
-        uint pc = SimpleDefiDiamond(payable(appAddr)).pendingRewardUser(user);        
+        uint pc2 = SimpleDefiDiamond(payable(appAddr)).pendingRewardUser(user);        
 
-        console.log("Pending Reward:", pc);
+        console.log("Pending Reward:", pc1,pc2);
     }
 
     function test004_ClearCakeAfterDeposit() public {
@@ -196,8 +198,6 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
 
         console.log(bal1,bal0);
         assertGt(bal1,bal0);
-        
-        vm.stopPrank();
     }
 
 
@@ -318,6 +318,17 @@ contract simpleDefiDiamondTest is Test, deployDiamondScript {
         vm.prank(user);
         vm.expectRevert(SimpleDefiDiamond.sdInsufficentFunds.selector);
         SimpleDefiDiamond(appAddr).liquidate();
+    }
+
+    function test018_testOwner() public {
+        address _owner = SimpleDefiDiamond(appAddr).owner();
+        console.log("Owner:",_owner,_godUser);
+        assertEq(_owner, _godUser);
+    }
+
+    function test019_setInterToken() public {
+        vm.prank(_godUser);
+        SimpleDefiDiamond(appAddr).setInterToken(0x55d398326f99059fF775485246999027B3197955,address(0));    
     }
 
 
